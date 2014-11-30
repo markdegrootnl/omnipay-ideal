@@ -1,16 +1,16 @@
 {
     "name": "omnipay/ideal",
     "type": "library",
-    "description": "Mollie driver for the Omnipay payment processing library",
+    "description": "iDeal driver for the Omnipay payment processing library",
     "keywords": [
         "gateway",
         "merchant",
-        "mollie",
+        "ideal",
         "omnipay",
         "pay",
         "payment"
     ],
-    "homepage": "https://github.com/thephpleague/omnipay-mollie",
+    "homepage": "https://github.com/markdegrootnl/omnipay-ideal",
     "license": "MIT",
     "authors": [
         {
@@ -19,7 +19,7 @@
         },
         {
             "name": "Omnipay Contributors",
-            "homepage": "https://github.com/thephpleague/omnipay-mollie/contributors"
+            "homepage": "https://github.com/markdegrootnl/omnipay-ideal/contributors"
         }
     ],
     "autoload": {
