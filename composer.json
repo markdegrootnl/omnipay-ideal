@@ -1,20 +1,39 @@
 {
     "name": "omnipay/ideal",
-    "description": "",
+    "type": "library",
+    "description": "Mollie driver for the Omnipay payment processing library",
+    "keywords": [
+        "gateway",
+        "merchant",
+        "mollie",
+        "omnipay",
+        "pay",
+        "payment"
+    ],
+    "homepage": "https://github.com/thephpleague/omnipay-mollie",
+    "license": "MIT",
     "authors": [
         {
             "name": "Mark de Groot",
             "email": "mail@markdegroot.nl"
+        },
+        {
+            "name": "Omnipay Contributors",
+            "homepage": "https://github.com/thephpleague/omnipay-mollie/contributors"
         }
     ],
-    "require": {
-        "php": ">=5.4.0",
-        "illuminate/support": "4.2.*"
-    },
     "autoload": {
-        "psr-0": {
-            "Omnipay\\Ideal": "src/"
-        }
+        "psr-4": { "Omnipay\\Mollie\\" : "src/" }
     },
-    "minimum-stability": "stable"
+    "require": {
+        "omnipay/common": "~2.2"
+    },
+    "require-dev": {
+        "omnipay/tests": "~2.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    }
 }
