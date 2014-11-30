@@ -55,6 +55,16 @@ class Gateway extends AbstractGateway
         return $this->setParameter('merchantId', $value);
     }
 
+    public function getSubId()
+    {
+        return $this->getParameter('SubId');
+    }
+
+    public function setSubId($value)
+    {
+        return $this->setParameter('SubId', $value);
+    }
+
     public function getPublicKeyPath()
     {
         return $this->getParameter('publicKeyPath');

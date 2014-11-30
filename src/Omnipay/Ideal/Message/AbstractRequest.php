@@ -48,6 +48,16 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('merchantId', $value);
     }
 
+    public function getSubId()
+    {
+        return $this->getParameter('SubId');
+    }
+
+    public function setSubId($value)
+    {
+        return $this->setParameter('SubId', $value);
+    }
+
     public function getPublicKeyPath()
     {
         return $this->getParameter('publicKeyPath');
@@ -96,9 +106,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         $data->addAttribute('xmlns', static::IDEAL_NS);
         $data->addAttribute('version', static::IDEAL_VERSION);
         $data->createDateTimestamp = gmdate('Y-m-d\TH:i:s.000\Z');
-
-        $data->Merchant->merchantID = $this->getMerchantId();
-        $data->Merchant->subID = 0;
 
         return $data;
     }
@@ -236,6 +243,10 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $data)->send();
 
         return $this->response = new Response($this, $httpResponse->xml());
+    }
+
+    public function sendData($data){
+        throw new Exception('This method is not implemented.');
     }
 
     public function getEndpoint()

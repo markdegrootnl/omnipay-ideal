@@ -18,6 +18,9 @@ class FetchIssuersRequest extends AbstractRequest
 {
     public function getData()
     {
-        return $this->getBaseData('DirectoryReq');
+    	$data = $this->getBaseData('DirectoryReq');
+        $data->Merchant->merchantID = $this->getMerchantId();
+        $data->Merchant->subID = $this->getSubId();
+        return $data;
     }
 }

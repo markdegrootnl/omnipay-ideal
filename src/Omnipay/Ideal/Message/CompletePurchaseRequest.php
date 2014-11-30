@@ -18,8 +18,13 @@ class CompletePurchaseRequest extends AbstractRequest
 {
     public function getData()
     {
-        $data = $this->getBaseData('AcquirerStatusReq');
+    	$this->validate('transactionId');
 
+        $data = $this->getBaseData('AcquirerStatusReq');
+        $data->Merchant->merchantID = $this->getMerchantId();
+        $data->Merchant->subID = $this->getSubId();
+        $data->Transaction->transactionID = $this->getTransactionId();
+        
         return $data;
     }
 }

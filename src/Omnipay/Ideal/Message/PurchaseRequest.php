@@ -21,10 +21,12 @@ class PurchaseRequest extends AbstractRequest
         $this->validate('issuer', 'amount', 'currency', 'returnUrl');
 
         $data = $this->getBaseData('AcquirerTrxReq');
-        $data->Issuer->issuerId = $this->getIssuer();
+        $data->Issuer->issuerID = $this->getIssuer();
+        $data->Merchant->merchantID = $this->getMerchantId();
+        $data->Merchant->subID = $this->getSubId();
         $data->Merchant->merchantReturnURL = $this->getReturnUrl();
         $data->Transaction->purchaseID = $this->getTransactionId();
-        $data->Transaction->amount = $this->getAmountDecimal();
+        $data->Transaction->amount = $this->getAmount();
         $data->Transaction->currency = $this->getCurrency();
         $data->Transaction->expirationPeriod = static::EXPIRATION_PERIOD;
         $data->Transaction->language = static::LANGUAGE;
