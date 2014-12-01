@@ -25,14 +25,7 @@ class Gateway extends AbstractGateway
 
     public function getDefaultParameters()
     {
-        return array(
-            'acquirer' => array('', 'ing', 'rabobank'),
-            'merchantId' => '',
-            'publicKeyPath' => '',
-            'privateKeyPath' => '',
-            'privateKeyPassphrase' => '',
-            'testMode' => false,
-        );
+        return array();
     }
 
     public function getAcquirer()
@@ -57,12 +50,12 @@ class Gateway extends AbstractGateway
 
     public function getSubId()
     {
-        return $this->getParameter('SubId');
+        return $this->getParameter('subId');
     }
 
     public function setSubId($value)
     {
-        return $this->setParameter('SubId', $value);
+        return $this->setParameter('subId', $value);
     }
 
     public function getPublicKeyPath()
