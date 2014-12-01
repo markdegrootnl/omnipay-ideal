@@ -50,12 +50,12 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     public function getSubId()
     {
-        return $this->getParameter('SubId');
+        return $this->getParameter('subId');
     }
 
     public function setSubId($value)
     {
-        return $this->setParameter('SubId', $value);
+        return $this->setParameter('subId', $value);
     }
 
     public function getPublicKeyPath()
