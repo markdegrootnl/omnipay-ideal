@@ -100,8 +100,8 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     protected function getBaseData($action)
     {
-        $this->validate('merchantId');
-
+        $this->validate('acquirer', 'testMode', 'merchantId', 'subId', 'publicKeyPath', 'privateKeyPath', 'privateKeyPassphrase');
+        
         $data = new SimpleXMLElement("<?xml version='1.0' encoding='UTF-8'?><$action />");
         $data->addAttribute('xmlns', static::IDEAL_NS);
         $data->addAttribute('version', static::IDEAL_VERSION);
