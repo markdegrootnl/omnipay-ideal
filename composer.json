@@ -2,6 +2,7 @@
     "name": "omnipay/ideal",
     "type": "library",
     "description": "iDeal driver for the Omnipay payment processing library",
+    "version": "1.0",
     "keywords": [
         "gateway",
         "merchant",
@@ -27,10 +28,5 @@
     },
     "require": {
         "omnipay/common": "~2.2"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.0.x-dev"
-        }
     }
 }
