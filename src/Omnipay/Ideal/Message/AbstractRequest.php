@@ -110,6 +110,21 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $data;
     }
 
+    /*
+    * This function overwrites the \Omnipay\Common\Message\AbstractRequest::validate() function
+    * to fix: https://github.com/thephpleague/omnipay-common/issues/13
+    * and can be removed once the issue is fixed upstream.
+    */
+    public function validate()
+    {
+        foreach (func_get_args() as $key) {
+            $value = $this->parameters->get($key);
+            if (empty($value) && $value !== '0' && $value !== false) {
+                throw new InvalidRequestException("The $key parameter is required");
+            }
+        }
+    }
+
     /**
      * Sign an XML request
      *
