@@ -19,6 +19,10 @@ class FetchIssuersResponse extends AbstractResponse
     public function rootElementExists(){
         return isset($this->data->Directory);
     }
+
+    public function getDirectory() {
+        return $this->data->Directory;
+    }
     
     /**
      * Get an associateive array of banks returned from a fetchIssuers request

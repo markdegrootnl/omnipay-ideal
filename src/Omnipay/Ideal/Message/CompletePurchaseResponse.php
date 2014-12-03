@@ -21,6 +21,10 @@ class CompletePurchaseResponse extends AbstractResponse
         return isset($this->data->Transaction);
     }
 
+    public function getTransaction(){
+            return $this->data->Transaction;
+    }
+
     public function getTransactionID(){
         if (isset($this->data->Transaction)) {
             return (string)$this->data->Transaction->transactionID;
@@ -68,6 +72,4 @@ class CompletePurchaseResponse extends AbstractResponse
             return (string)$this->data->Transaction->currency;
         }
     }
-
-
 }

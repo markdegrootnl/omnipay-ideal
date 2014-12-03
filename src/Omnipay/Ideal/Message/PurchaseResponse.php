@@ -21,6 +21,14 @@ class PurchaseResponse extends AbstractResponse
         return isset($this->data->Transaction) && isset($this->data->Issuer);
     }
 
+    public function getIssuer() {
+		return $this->data->Issuer;
+	}
+
+	public function getTransaction(){
+		return $this->data->Transaction;
+	}
+
 	public function getIssuerAuthenticationURL() {
 		if (isset($this->data->Issuer)) {
 			return (string)$this->data->Issuer->issuerAuthenticationURL;
