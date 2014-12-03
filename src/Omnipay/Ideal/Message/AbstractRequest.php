@@ -242,12 +242,14 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         $data = $this->signXML($this->getData()->asXML());
         $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $data)->send();
 
-        return $this->response = new Response($this, $httpResponse->xml());
+        return $this->response = $this->parseResponse($this, $httpResponse->xml());
     }
 
     public function sendData($data){
         throw new Exception('This method is not implemented.');
     }
+
+    public abstract function parseResponse(\Omnipay\Common\Message\RequestInterface $request, $data);
 
     public function getEndpoint()
     {

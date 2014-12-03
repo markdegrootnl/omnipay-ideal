@@ -23,4 +23,8 @@ class FetchIssuersRequest extends AbstractRequest
         $data->Merchant->subID = $this->getSubId();
         return $data;
     }
+
+    public function parseResponse(\Omnipay\Common\Message\RequestInterface $request, $data){
+    	return new FetchIssuersResponse($request, $data);
+    }
 }

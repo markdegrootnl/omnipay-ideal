@@ -35,4 +35,8 @@ class PurchaseRequest extends AbstractRequest
 
         return $data;
     }
+
+    public function parseResponse(\Omnipay\Common\Message\RequestInterface $request, $data){
+        return new PurchaseResponse($request, $data);
+    }
 }
