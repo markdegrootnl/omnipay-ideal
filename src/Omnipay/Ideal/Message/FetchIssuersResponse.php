@@ -24,11 +24,7 @@ class FetchIssuersResponse extends AbstractResponse
         return $this->data->Directory;
     }
     
-    /**
-     * Get an associateive array of banks returned from a fetchIssuers request
-     */
-    public function getIssuers()
-    {
+    public function getIssuers() {
         if (isset($this->data->Directory)) {
             $issuers = array();
 
