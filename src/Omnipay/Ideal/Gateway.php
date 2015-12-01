@@ -25,7 +25,14 @@ class Gateway extends AbstractGateway
 
     public function getDefaultParameters()
     {
-        return array();
+        return array(
+            'acquirer' => array('', 'ing', 'rabobank'),
+            'merchantId' => '',
+            'publicKeyPath' => '',
+            'privateKeyPath' => '',
+            'privateKeyPassphrase' => '',
+            'testMode' => false,
+        );
     }
 
     public function getAcquirer()
