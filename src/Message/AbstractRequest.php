@@ -28,6 +28,21 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     const IDEAL_NS = 'http://www.idealdesk.com/ideal/messages/mer-acq/3.3.1';
     const XMLDSIG_NS = 'http://www.w3.org/2000/09/xmldsig#';
 
+    protected $endpoints = [
+        'abnamro' => [
+            'production' => 'https://abnamro.ideal-payment.de/ideal/iDEALv3',
+            'test' => 'https://abnamro-test.ideal-payment.de/ideal/iDEALv3'
+        ],
+        'ing' => [
+            'production' => 'https://ideal.secure-ing.com/ideal/iDEALv3',
+            'test' => 'https://idealtest.secure-ing.com/ideal/iDEALv3'
+        ],
+        'rabobank' => [
+            'production' => 'https://ideal.rabobank.nl/ideal/iDEALv3',
+            'test' => 'https://idealtest.rabobank.nl/ideal/iDEALv3'
+        ]
+    ];
+
     public function getAcquirer()
     {
         return $this->getParameter('acquirer');
@@ -269,13 +284,10 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function getEndpoint()
     {
         $this->validate('acquirer');
-        $base = $this->getTestMode() ? 'https://idealtest.' : 'https://ideal.';
+        $environment = $this->getTestMode() ? 'test' : 'production';
 
-        switch ($this->getAcquirer()) {
-            case 'ing':
-                return $base.'secure-ing.com/ideal/iDEALv3';
-            case 'rabobank':
-                return $base.'rabobank.nl/ideal/iDEALv3';
+        if (array_key_exists($acquirer = $this->getAcquirer(), $this->endpoints)) {
+            return $this->endpoints[$acquirer][$environment];
         }
 
         throw new InvalidRequestException('Invalid acquirer selected');
