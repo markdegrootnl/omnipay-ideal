@@ -83,6 +83,16 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('publicKeyPath', $value);
     }
 
+    public function getPublicKeyString()
+    {
+        return $this->getParameter('publicKeyString');
+    }
+
+    public function setPublicKeyString($value)
+    {
+        return $this->setParameter('publicKeyString', $value);
+    }
+
     public function getPrivateKeyPath()
     {
         return $this->getParameter('privateKeyPath');
@@ -91,6 +101,16 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function setPrivateKeyPath($value)
     {
         return $this->setParameter('privateKeyPath', $value);
+    }
+
+    public function getPrivateKeyString()
+    {
+        return $this->getParameter('privateKeyString');
+    }
+
+    public function setPrivateKeyString($value)
+    {
+        return $this->setParameter('privateKeyString', $value);
     }
 
     public function getPrivateKeyPassphrase()
@@ -115,7 +135,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     protected function getBaseData($action)
     {
-        $this->validate('acquirer', 'testMode', 'merchantId', 'subId', 'publicKeyPath', 'privateKeyPath', 'privateKeyPassphrase');
+        $this->validate('acquirer', 'testMode', 'merchantId', 'subId', 'privateKeyPassphrase');
         
         $data = new SimpleXMLElement("<?xml version='1.0' encoding='UTF-8'?><$action />");
         $data->addAttribute('xmlns', static::IDEAL_NS);
@@ -222,7 +242,9 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         $message = $this->c14n($xml);
 
-        $key = openssl_get_privatekey('file://'.$this->getPrivateKeyPath(), $this->getPrivateKeyPassphrase());
+        $privateKey = $this->getPrivateKeyPath() ? 'file://'.$this->getPrivateKeyPath() : $this->getPrivateKeyString();
+
+        $key = openssl_get_privatekey($privateKey, $this->getPrivateKeyPassphrase());
         if ($key && openssl_sign($message, $signature, $key, OPENSSL_ALGO_SHA256)) {
             openssl_free_key($key);
 
@@ -258,7 +280,9 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     public function getPublicKeyDigest()
     {
-        if (openssl_x509_export('file://'.$this->getPublicKeyPath(), $cert)) {
+        $publicKey = $this->getPublicKeyPath() ? 'file://'.$this->getPublicKeyPath() : $this->getPublicKeyString();
+
+        if (openssl_x509_export($publicKey, $cert)) {
             $cert = str_replace(array('-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----'), '', $cert);
 
             return strtoupper(sha1(base64_decode($cert)));
@@ -275,11 +299,12 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->response = $this->parseResponse($this, $httpResponse->xml());
     }
 
-    public function sendData($data){
+    public function sendData($data)
+    {
         throw new Exception('This method is not implemented.');
     }
 
-    public abstract function parseResponse(\Omnipay\Common\Message\RequestInterface $request, $data);
+    abstract public function parseResponse(\Omnipay\Common\Message\RequestInterface $request, $data);
 
     public function getEndpoint()
     {

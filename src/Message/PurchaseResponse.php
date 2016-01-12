@@ -21,6 +21,16 @@ class PurchaseResponse extends AbstractResponse
         return isset($this->data->Transaction) && isset($this->data->Issuer);
     }
 
+    public function hasErrors() {
+		return isset($this->data->Error);
+	}
+
+	public function getErrorDetails() {
+		if ($this->hasErrors()) {
+			return (array)$this->data->Error;
+		}
+	}
+
     public function getIssuer() {
 		return $this->data->Issuer;
 	}

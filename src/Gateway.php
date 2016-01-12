@@ -28,10 +28,13 @@ class Gateway extends AbstractGateway
         return array(
             'acquirer' => array('', 'abnamro', 'ing', 'rabobank'),
             'merchantId' => '',
+            'subId' => '0',
             'publicKeyPath' => '',
+            'publicKeyString' => '',
             'privateKeyPath' => '',
+            'privateKeyString' => '',
             'privateKeyPassphrase' => '',
-            'testMode' => false,
+            'testMode' => false
         );
     }
 
@@ -75,6 +78,16 @@ class Gateway extends AbstractGateway
         return $this->setParameter('publicKeyPath', $value);
     }
 
+    public function getPublicKeyString()
+    {
+        return $this->getParameter('publicKeyString');
+    }
+
+    public function setPublicKeyString($value)
+    {
+        return $this->setParameter('publicKeyString', $value);
+    }
+
     public function getPrivateKeyPath()
     {
         return $this->getParameter('privateKeyPath');
@@ -83,6 +96,16 @@ class Gateway extends AbstractGateway
     public function setPrivateKeyPath($value)
     {
         return $this->setParameter('privateKeyPath', $value);
+    }
+
+    public function getPrivateKeyString()
+    {
+        return $this->getParameter('privateKeyString');
+    }
+
+    public function setPrivateKeyString($value)
+    {
+        return $this->setParameter('privateKeyString', $value);
     }
 
     public function getPrivateKeyPassphrase()
