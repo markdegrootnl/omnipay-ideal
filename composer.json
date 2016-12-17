@@ -10,20 +10,16 @@
         "pay",
         "payment"
     ],
-    "homepage": "https://github.com/jarnovanleeuwen/omnipay-ideal",
+    "homepage": "https://github.com/markdegrootnl/omnipay-ideal",
     "license": "MIT",
     "authors": [
-        {
-            "name": "Jarno van Leeuwen",
-            "email": "vanleeuwen.jarno@gmail.com"
-        },
         {
             "name": "Mark de Groot",
             "email": "mail@markdegroot.nl"
         },
         {
             "name": "Omnipay Contributors",
-            "homepage": "https://github.com/jarnovanleeuwen/omnipay-ideal/contributors"
+            "homepage": "https://github.com/markdegrootnl/omnipay-ideal/contributors"
         }
     ],
     "autoload": {
