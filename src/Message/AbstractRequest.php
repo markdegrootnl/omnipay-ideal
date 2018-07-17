@@ -28,6 +28,21 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     const IDEAL_NS = 'http://www.idealdesk.com/ideal/messages/mer-acq/3.3.1';
     const XMLDSIG_NS = 'http://www.w3.org/2000/09/xmldsig#';
 
+    protected $endpoints = [
+        'abnamro' => [
+            'production' => 'https://abnamro.ideal-payment.de/ideal/iDEALv3',
+            'test' => 'https://abnamro-test.ideal-payment.de/ideal/iDEALv3'
+        ],
+        'ing' => [
+            'production' => 'https://ideal.secure-ing.com/ideal/iDEALv3',
+            'test' => 'https://idealtest.secure-ing.com/ideal/iDEALv3'
+        ],
+        'rabobank' => [
+            'production' => 'https://ideal.rabobank.nl/ideal/iDEALv3',
+            'test' => 'https://idealtest.rabobank.nl/ideal/iDEALv3'
+        ]
+    ];
+
     public function getAcquirer()
     {
         return $this->getParameter('acquirer');
@@ -68,6 +83,16 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('publicKeyPath', $value);
     }
 
+    public function getPublicKeyString()
+    {
+        return $this->getParameter('publicKeyString');
+    }
+
+    public function setPublicKeyString($value)
+    {
+        return $this->setParameter('publicKeyString', $value);
+    }
+
     public function getPrivateKeyPath()
     {
         return $this->getParameter('privateKeyPath');
@@ -76,6 +101,16 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function setPrivateKeyPath($value)
     {
         return $this->setParameter('privateKeyPath', $value);
+    }
+
+    public function getPrivateKeyString()
+    {
+        return $this->getParameter('privateKeyString');
+    }
+
+    public function setPrivateKeyString($value)
+    {
+        return $this->setParameter('privateKeyString', $value);
     }
 
     public function getPrivateKeyPassphrase()
@@ -100,7 +135,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     protected function getBaseData($action)
     {
-        $this->validate('acquirer', 'testMode', 'merchantId', 'subId', 'publicKeyPath', 'privateKeyPath', 'privateKeyPassphrase');
+        $this->validate('acquirer', 'testMode', 'merchantId', 'subId', 'privateKeyPassphrase');
         
         $data = new SimpleXMLElement("<?xml version='1.0' encoding='UTF-8'?><$action />");
         $data->addAttribute('xmlns', static::IDEAL_NS);
@@ -207,7 +242,9 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         $message = $this->c14n($xml);
 
-        $key = openssl_get_privatekey('file://'.$this->getPrivateKeyPath(), $this->getPrivateKeyPassphrase());
+        $privateKey = $this->getPrivateKeyPath() ? 'file://'.$this->getPrivateKeyPath() : $this->getPrivateKeyString();
+
+        $key = openssl_get_privatekey($privateKey, $this->getPrivateKeyPassphrase());
         if ($key && openssl_sign($message, $signature, $key, OPENSSL_ALGO_SHA256)) {
             openssl_free_key($key);
 
@@ -243,7 +280,9 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     public function getPublicKeyDigest()
     {
-        if (openssl_x509_export('file://'.$this->getPublicKeyPath(), $cert)) {
+        $publicKey = $this->getPublicKeyPath() ? 'file://'.$this->getPublicKeyPath() : $this->getPublicKeyString();
+
+        if (openssl_x509_export($publicKey, $cert)) {
             $cert = str_replace(array('-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----'), '', $cert);
 
             return strtoupper(sha1(base64_decode($cert)));
@@ -255,27 +294,25 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function send()
     {
         $data = $this->signXML($this->getData()->asXML());
-        $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $data)->send();
+        $httpResponse = $this->httpClient->request('POST', $this->getEndpoint(), [], $data);
 
-        return $this->response = $this->parseResponse($this, $httpResponse->xml());
+        return $this->response = $this->parseResponse($this, simplexml_load_string($httpResponse->getBody()->getContents()));
     }
 
-    public function sendData($data){
+    public function sendData($data)
+    {
         throw new Exception('This method is not implemented.');
     }
 
-    public abstract function parseResponse(\Omnipay\Common\Message\RequestInterface $request, $data);
+    abstract public function parseResponse(\Omnipay\Common\Message\RequestInterface $request, $data);
 
     public function getEndpoint()
     {
         $this->validate('acquirer');
-        $base = $this->getTestMode() ? 'https://idealtest.' : 'https://ideal.';
+        $environment = $this->getTestMode() ? 'test' : 'production';
 
-        switch ($this->getAcquirer()) {
-            case 'ing':
-                return $base.'secure-ing.com/ideal/iDEALv3';
-            case 'rabobank':
-                return $base.'rabobank.nl/ideal/iDEALv3';
+        if (array_key_exists($acquirer = $this->getAcquirer(), $this->endpoints)) {
+            return $this->endpoints[$acquirer][$environment];
         }
 
         throw new InvalidRequestException('Invalid acquirer selected');
